@@ -10,9 +10,11 @@
 #include "ConfigController.h"
 #include "GBAApp.h"
 #include "Window.h"
+#include "SocketAPI.h"
 
 #include <mgba/core/version.h>
 #include <mgba/gba/interface.h>
+#include <iostream>
 
 #include <QLibraryInfo>
 #include <QTranslator>
@@ -120,6 +122,9 @@ int main(int argc, char* argv[]) {
 	}
 
 	w->show();
+
+	w->loadROM("./pokeemerald.gba");
+	// application.newWindow();
 
 	return application.exec();
 }

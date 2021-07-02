@@ -1,0 +1,8 @@
+{
+  "files.associations": {
+    "*.inc": "poryscript",
+    "serialize.h": "c",
+    "thread": "cpp",
+    "proxy.h": "c"
+  }
+}

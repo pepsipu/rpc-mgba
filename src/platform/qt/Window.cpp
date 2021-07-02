@@ -335,6 +335,10 @@ void Window::selectROM() {
 	}
 }
 
+void Window::loadROM(const QString& fname) {
+	setController(m_manager->loadGame(fname), fname);
+}
+
 void Window::bootBIOS() {
 	setController(m_manager->loadBIOS(mPLATFORM_GBA, m_config->getOption("gba.bios")), QString());
 }
@@ -1176,7 +1180,7 @@ void Window::setupMenu(QMenuBar* menubar) {
 	installEventFilter(m_shortcutController);
 
 	menubar->clear();
-	m_actions.addMenu(tr("&File"), "file");
+	// m_actions.addMenu(tr("&File"), "file");
 
 	m_actions.addAction(tr("Load &ROM..."), "loadROM", this, &Window::selectROM, "file", QKeySequence::Open);
 
@@ -1305,7 +1309,7 @@ void Window::setupMenu(QMenuBar* menubar) {
 	m_actions.addAction(tr("E&xit"), "quit", static_cast<QWidget*>(this), &QWidget::close, "file", QKeySequence::Quit);
 #endif
 
-	m_actions.addMenu(tr("&Emulation"), "emu");
+	// m_actions.addMenu(tr("&Emulation"), "emu");
 	addGameAction(tr("&Reset"), "reset", &CoreController::reset, "emu", QKeySequence("Ctrl+R"));
 	addGameAction(tr("Sh&utdown"), "shutdown", &CoreController::stop, "emu");
 	addGameAction(tr("Yank game pak"), "yank", &CoreController::yankPak, "emu");
@@ -1414,7 +1418,7 @@ void Window::setupMenu(QMenuBar* menubar) {
 	m_platformActions.insert(mPLATFORM_GBA, bcGate);
 #endif
 
-	m_actions.addMenu(tr("Audio/&Video"), "av");
+	// m_actions.addMenu(tr("Audio/&Video"), "av");
 	m_actions.addMenu(tr("Frame size"), "frame", "av");
 	for (int i = 1; i <= 8; ++i) {
 		Action* setSize = m_actions.addAction(tr("%1×").arg(QString::number(i)), QString("frame.%1x").arg(QString::number(i)), [this, i]() {
@@ -1547,7 +1551,7 @@ void Window::setupMenu(QMenuBar* menubar) {
 
 	addGameAction(tr("Adjust layer placement..."), "placementControl", openControllerTView<PlacementControl>(), "av");
 
-	m_actions.addMenu(tr("&Tools"), "tools");
+	// m_actions.addMenu(tr("&Tools"), "tools");
 	m_actions.addAction(tr("View &logs..."), "viewLogs", static_cast<QWidget*>(m_logView), &QWidget::show, "tools");
 
 	m_actions.addAction(tr("Game &overrides..."), "overrideWindow", [this]() {

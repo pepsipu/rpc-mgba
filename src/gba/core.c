@@ -32,6 +32,8 @@
 #include <mgba-util/patch.h>
 #include <mgba-util/vfs.h>
 
+#include <mgba/feature/rpcserver.h>
+
 static const struct mCoreChannelInfo _GBAVideoLayers[] = {
 	{ GBA_LAYER_BG0, "bg0", "Background 0", NULL },
 	{ GBA_LAYER_BG1, "bg1", "Background 1", NULL },
@@ -211,6 +213,8 @@ static bool _GBACoreInit(struct mCore* core) {
 #if !defined(MINIMAL_CORE) || MINIMAL_CORE < 2
 	mDirectorySetInit(&core->dirs);
 #endif
+
+	setCoreRPC(core);
 	
 	return true;
 }

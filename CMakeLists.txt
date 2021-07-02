@@ -770,7 +770,7 @@ if (USE_DISCORD_RPC)
 	list(APPEND FEATURES DISCORD_RPC)
 	include_directories(AFTER ${CMAKE_CURRENT_SOURCE_DIR}/src/third-party/discord-rpc/include)
 endif()
-
+list(APPEND THIRD_PARTY_SRC src/feature/rpc/rpcserver.cpp)
 if(ENABLE_SCRIPTING)
 	list(APPEND ENABLES SCRIPTING)
 

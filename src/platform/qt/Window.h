@@ -72,6 +72,7 @@ signals:
 	void paused(bool);
 
 public slots:
+	void loadROM(const QString& fname);
 	void setController(CoreController* controller, const QString& fname);
 	void selectROM();
 	void bootBIOS();
