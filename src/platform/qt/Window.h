@@ -73,6 +73,7 @@ signals:
 
 public slots:
 	void loadROM(const QString& fname);
+	void loadSave(const QString& path);
 	void setController(CoreController* controller, const QString& fname);
 	void selectROM();
 	void bootBIOS();

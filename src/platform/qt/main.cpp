@@ -124,6 +124,7 @@ int main(int argc, char* argv[]) {
 	w->show();
 
 	w->loadROM("./pokeemerald.gba");
+	w->loadSave("./cable-room.sav");
 	// application.newWindow();
 
 	return application.exec();

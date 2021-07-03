@@ -387,6 +387,10 @@ void Window::selectSave(bool temporary) {
 	}
 }
 
+void Window::loadSave(const QString& path) {
+	m_controller->loadSave(path, true);
+}
+
 void Window::selectState(bool load) {
 	QStringList formats{"*.ss0", "*.ss1", "*.ss2", "*.ss3", "*.ss4", "*.ss5", "*.ss6", "*.ss7", "*.ss8", "*.ss9"};
 	QString filter = tr("mGBA save state files (%1)").arg(formats.join(QChar(' ')));
