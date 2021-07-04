@@ -9,6 +9,7 @@
 #include <mgba/internal/gba/dma.h>
 #include <mgba/internal/gba/gba.h>
 #include <mgba/internal/gba/serialize.h>
+#include <mgba/feature/rpcserver.h>
 
 mLOG_DEFINE_CATEGORY(GBA_IO, "GBA I/O", "gba.io");
 
@@ -736,6 +737,9 @@ uint16_t GBAIORead(struct GBA* gba, uint32_t address) {
 		break;
 
 	case REG_KEYINPUT: {
+			if (rpc_servicing && rpc_gba == gba) {
+				break;
+			}
 			size_t c;
 			for (c = 0; c < mCoreCallbacksListSize(&gba->coreCallbacks); ++c) {
 				struct mCoreCallbacks* callbacks = mCoreCallbacksListGetPointer(&gba->coreCallbacks, c);

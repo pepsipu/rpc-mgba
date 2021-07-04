@@ -8,8 +8,11 @@
 #include <thread>
 #include <unistd.h>
 
-#define PORT 2323
+#define PORT 2322
 #define BANNER "RPC_MGBA"
+
+bool rpc_servicing = false;
+struct GBA* rpc_gba = nullptr;
 
 namespace RPCServer {
 
@@ -90,15 +93,17 @@ void socket_start() {
 	while (true) {
 		listen(fd, 1);
 		int conn = accept(fd, (struct sockaddr*) &address, &addr_size);
+		rpc_servicing = true;
 		send(conn, BANNER, sizeof(BANNER) - 1, 0);
 		while (handle_conn(conn))
 			;
 		close(conn);
+		rpc_servicing = false;
 	}
 }
 
 void maybe_start_RPC(struct mCore* core) {
-	if (t_server != nullptr) {
+	if (t_server) {
 		return;
 	}
 	m_core = core;
@@ -119,6 +124,9 @@ void stop_RPC(bool wait) {
 
 }
 
-void setCoreRPC(struct mCore* core) {
+void setCoreRPC(struct mCore* core, struct GBA* gba) {
 	RPCServer::maybe_start_RPC(core);
+	if (!rpc_gba) {
+		rpc_gba = gba;
+	}
 }

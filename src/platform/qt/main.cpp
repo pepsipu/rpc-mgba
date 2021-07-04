@@ -9,14 +9,16 @@
 
 #include "ConfigController.h"
 #include "GBAApp.h"
-#include "Window.h"
 #include "SocketAPI.h"
+#include "Window.h"
 
+#include <iostream>
 #include <mgba/core/version.h>
 #include <mgba/gba/interface.h>
-#include <iostream>
 
+#include <QInputDialog>
 #include <QLibraryInfo>
+#include <QMessageBox>
 #include <QTranslator>
 
 #ifdef BUILD_GLES2
@@ -115,17 +117,45 @@ int main(int argc, char* argv[]) {
 	freeArguments(&args);
 
 	if (graphicsOpts.multiplier) {
-		w->resizeFrame(QSize(GBA_VIDEO_HORIZONTAL_PIXELS * graphicsOpts.multiplier, GBA_VIDEO_VERTICAL_PIXELS * graphicsOpts.multiplier));
+		w->resizeFrame(QSize(GBA_VIDEO_HORIZONTAL_PIXELS * graphicsOpts.multiplier,
+		                     GBA_VIDEO_VERTICAL_PIXELS * graphicsOpts.multiplier));
 	}
 	if (graphicsOpts.fullscreen) {
 		w->enterFullScreen();
 	}
 
-	w->show();
+	// w->show()
 
-	w->loadROM("./pokeemerald.gba");
-	w->loadSave("./cable-room.sav");
-	// application.newWindow();
+	QTimer::singleShot(0, [w]() {
+		mLOG(QT, INFO, "loading rom pokeemerald.gba");
+		w->loadROM("./pokeemerald.gba");
+
+		mLOG(QT, INFO, "loading save file /saves/cable-room.sav");
+		w->loadSave("/saves/cable-room.sav");
+
+		mLOG(QT, INFO, "loaded everything");
+		// w->hide();
+	});
+
+	QTimer::singleShot(0xff, []() {
+		Window* userWindow = GBAApp::app()->newWindow();
+
+		bool ok;
+		QString text = QInputDialog::getText(0, "Save ID", "Save ID:", QLineEdit::Normal, "", &ok);
+		if (ok && !text.isEmpty() && !std::count_if(text.begin(), text.end(), [](auto ch) {
+			    char chr = ch.toLatin1();
+			    return !std::isalnum(chr) && chr != '_' && chr != '-';
+		    })) {
+			userWindow->loadROM("./pokeemerald.gba");
+			userWindow->loadSave("/saves/" + text + ".sav");
+		} else {
+			QMessageBox::information(0, "Error", "Save ID is invalid");
+		}
+	});
+
+	// w->hide();
+
+	// // userWindow->show();
 
 	return application.exec();
 }
@@ -134,8 +164,7 @@ int main(int argc, char* argv[]) {
 #include <mgba-util/string.h>
 #include <vector>
 
-extern "C"
-int wmain(int argc, wchar_t* argv[]) {
+extern "C" int wmain(int argc, wchar_t* argv[]) {
 	std::vector<char*> argv8;
 	for (int i = 0; i < argc; ++i) {
 		argv8.push_back(utf16to8(reinterpret_cast<uint16_t*>(argv[i]), wcslen(argv[i]) * 2));

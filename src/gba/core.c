@@ -214,7 +214,7 @@ static bool _GBACoreInit(struct mCore* core) {
 	mDirectorySetInit(&core->dirs);
 #endif
 
-	setCoreRPC(core);
+	setCoreRPC(core, gba);
 	
 	return true;
 }
