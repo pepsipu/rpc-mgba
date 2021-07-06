@@ -8,7 +8,7 @@
 #include <thread>
 #include <unistd.h>
 
-#define PORT 2322
+#define PORT 2323
 #define BANNER "RPC_MGBA"
 
 bool rpc_servicing = false;

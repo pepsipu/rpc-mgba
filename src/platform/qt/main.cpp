@@ -12,9 +12,11 @@
 #include "SocketAPI.h"
 #include "Window.h"
 
+#include <fstream>
 #include <iostream>
 #include <mgba/core/version.h>
 #include <mgba/gba/interface.h>
+#include <sstream>
 
 #include <QInputDialog>
 #include <QLibraryInfo>
@@ -130,8 +132,8 @@ int main(int argc, char* argv[]) {
 		mLOG(QT, INFO, "loading rom pokeemerald.gba");
 		w->loadROM("./pokeemerald.gba");
 
-		mLOG(QT, INFO, "loading save file /saves/cable-room.sav");
-		w->loadSave("/saves/cable-room.sav");
+		mLOG(QT, INFO, "loading save file /saves/server.sav");
+		w->loadSave("./server.sav");
 
 		mLOG(QT, INFO, "loaded everything");
 		// w->hide();
@@ -139,18 +141,13 @@ int main(int argc, char* argv[]) {
 
 	QTimer::singleShot(0xff, []() {
 		Window* userWindow = GBAApp::app()->newWindow();
+		userWindow->loadROM("./pokeemerald.gba");
 
-		bool ok;
-		QString text = QInputDialog::getText(0, "Save ID", "Save ID:", QLineEdit::Normal, "", &ok);
-		if (ok && !text.isEmpty() && !std::count_if(text.begin(), text.end(), [](auto ch) {
-			    char chr = ch.toLatin1();
-			    return !std::isalnum(chr) && chr != '_' && chr != '-';
-		    })) {
-			userWindow->loadROM("./pokeemerald.gba");
-			userWindow->loadSave("/saves/" + text + ".sav");
-		} else {
-			QMessageBox::information(0, "Error", "Save ID is invalid");
-		}
+		std::ifstream t("/tmp/save");
+		std::stringstream saveId;
+		saveId << "/saves/" << t.rdbuf() << ".sav";
+
+		userWindow->loadSave(QString::fromUtf8(saveId.str().c_str()));
 	});
 
 	// w->hide();
