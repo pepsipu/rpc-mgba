@@ -1,4 +1,5 @@
 #include <mgba/core/core.h>
+#include <mgba/core/log.h>
 #include <mgba/feature/rpcserver.h>
 #include <netinet/in.h>
 #include <stdio.h>
@@ -91,6 +92,7 @@ void socket_start() {
 	bind(fd, (struct sockaddr*) &address, sizeof(address));
 
 	while (true) {
+		mLOG(STATUS, INFO, "rpc listening..");
 		listen(fd, 1);
 		int conn = accept(fd, (struct sockaddr*) &address, &addr_size);
 		rpc_servicing = true;
@@ -112,14 +114,6 @@ void maybe_start_RPC(struct mCore* core) {
 		socket_start();
 		t_server = nullptr;
 	});
-}
-
-void stop_RPC(bool wait) {
-	if (wait && t_server != nullptr) {
-		if (t_server->joinable()) {
-			t_server->join();
-		}
-	}
 }
 
 }
